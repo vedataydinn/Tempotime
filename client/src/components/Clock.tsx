@@ -1,19 +1,20 @@
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { Settings2, Play, Pause } from "lucide-react";
+import { Settings2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface ClockProps {
   currentTime: Date;
   isActive: boolean;
+  showSeconds: boolean;
   onSettingsClick: () => void;
 }
 
-export function Clock({ currentTime, isActive, onSettingsClick }: ClockProps) {
+export function Clock({ currentTime, showSeconds, onSettingsClick }: ClockProps) {
   const timeString = currentTime.toLocaleTimeString("tr-TR", {
     hour: "2-digit",
     minute: "2-digit",
-    second: "2-digit",
+    second: showSeconds ? "2-digit" : undefined,
     hour12: false
   });
 
@@ -31,19 +32,6 @@ export function Clock({ currentTime, isActive, onSettingsClick }: ClockProps) {
         >
           {timeString}
         </motion.h1>
-        <p className="mt-4 text-muted-foreground flex items-center justify-center gap-2">
-          {isActive ? (
-            <>
-              <Play className="w-4 h-4" />
-              Zaman akışı devam ediyor
-            </>
-          ) : (
-            <>
-              <Pause className="w-4 h-4" />
-              Zaman akışı duraklatıldı
-            </>
-          )}
-        </p>
       </Card>
 
       <motion.div 

@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
 import { DURATION_OPTIONS } from "@/lib/constants";
 import { Clock, FastForward, Rewind, Save } from "lucide-react";
 import {
@@ -15,20 +16,24 @@ import {
 interface TimeControlsProps {
   selectedDuration: number;
   timeSpeed: number;
+  showSeconds: boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onDurationChange: (duration: number) => void;
   onSpeedChange: (speed: number) => void;
+  onShowSecondsChange: (show: boolean) => void;
   onSaveSettings: () => void;
 }
 
 export function TimeControls({
   selectedDuration,
   timeSpeed,
+  showSeconds,
   open,
   onOpenChange,
   onDurationChange,
   onSpeedChange,
+  onShowSecondsChange,
   onSaveSettings
 }: TimeControlsProps) {
   return (
@@ -91,6 +96,22 @@ export function TimeControls({
                   ? "Hızlı" 
                   : "Normal"} ({timeSpeed}x)
             </p>
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-lg font-semibold flex items-center gap-2 text-primary">
+              <Clock className="w-5 h-5" />
+              Görünüm
+            </h2>
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">
+                Saniye gösterimi
+              </p>
+              <Switch
+                checked={showSeconds}
+                onCheckedChange={onShowSecondsChange}
+              />
+            </div>
           </div>
         </div>
 

@@ -11,6 +11,7 @@ export function useTimePerception() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [startTime] = useState(new Date());
   const [isActive, setIsActive] = useState(false);
+  const [showSeconds, setShowSeconds] = useState(true);
 
   const { playSpeedChangeSound } = useAudioFeedback();
   const { toast } = useToast();
@@ -100,8 +101,10 @@ export function useTimePerception() {
     settingsOpen,
     backgroundColor,
     isActive,
+    showSeconds,
     setSelectedDuration,
     setTimeSpeed: handleSpeedChange,
+    setShowSeconds,
     closeReminder: () => setReminderOpen(false),
     toggleSettings: (open: boolean) => setSettingsOpen(open),
     saveSettings

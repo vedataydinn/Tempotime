@@ -13,8 +13,10 @@ export default function Home() {
     settingsOpen,
     backgroundColor,
     isActive,
+    showSeconds,
     setSelectedDuration,
     setTimeSpeed,
+    setShowSeconds,
     closeReminder,
     toggleSettings,
     saveSettings
@@ -30,16 +32,19 @@ export default function Home() {
         <Clock 
           currentTime={currentTime}
           isActive={isActive}
+          showSeconds={showSeconds}
           onSettingsClick={() => toggleSettings(true)}
         />
 
         <TimeControls
           selectedDuration={selectedDuration}
           timeSpeed={timeSpeed}
+          showSeconds={showSeconds}
           open={settingsOpen}
           onOpenChange={toggleSettings}
           onDurationChange={setSelectedDuration}
           onSpeedChange={setTimeSpeed}
+          onShowSecondsChange={setShowSeconds}
           onSaveSettings={saveSettings}
         />
 
