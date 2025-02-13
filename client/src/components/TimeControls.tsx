@@ -55,15 +55,15 @@ export function TimeControls({
 }: TimeControlsProps) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent>
-        <SheetHeader>
+      <SheetContent className="bg-white dark:bg-gray-950 border-l border-gray-200 dark:border-gray-800">
+        <SheetHeader className="pb-4 border-b border-gray-200 dark:border-gray-800">
           <SheetTitle>{t('title')}</SheetTitle>
           <SheetDescription>
             {t('description')}
           </SheetDescription>
         </SheetHeader>
 
-        <div className="mt-6 space-y-6">
+        <div className="mt-6 space-y-6 max-h-[calc(100vh-250px)] overflow-y-auto pr-2">
           <div className="space-y-4">
             <h2 className="text-lg font-semibold flex items-center gap-2 text-primary">
               <Clock className="w-5 h-5" />
@@ -187,7 +187,8 @@ export function TimeControls({
           </div>
         </div>
 
-        <SheetFooter className="mt-8">
+        {/* Kaydet butonu her zaman altta sabit kalacak */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800">
           <Button 
             onClick={onSaveSettings} 
             className="w-full bg-primary hover:bg-primary/90 text-white py-6"
@@ -195,7 +196,7 @@ export function TimeControls({
             <Save className="w-5 h-5 mr-2" />
             {t('saveSettings')}
           </Button>
-        </SheetFooter>
+        </div>
       </SheetContent>
     </Sheet>
   );
