@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DURATION_OPTIONS, THEME_COLORS } from "@/lib/constants";
+import { DURATION_OPTIONS, EXTENDED_DURATION_OPTIONS, THEME_COLORS } from "@/lib/constants";
 import { Clock, FastForward, Rewind, Save, Palette, Globe } from "lucide-react";
 import {
   Sheet,
@@ -84,6 +84,23 @@ export function TimeControls({
                 </Button>
               ))}
             </div>
+
+            {/* Uzun süreler için açılır menü */}
+            <Select 
+              value={EXTENDED_DURATION_OPTIONS.includes(selectedDuration) ? selectedDuration.toString() : ''} 
+              onValueChange={(value) => onDurationChange(parseInt(value))}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Daha uzun süreler..." />
+              </SelectTrigger>
+              <SelectContent>
+                {EXTENDED_DURATION_OPTIONS.map((duration) => (
+                  <SelectItem key={duration} value={duration.toString()}>
+                    {duration / 3600} {t('hours')}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-4">
@@ -170,9 +187,12 @@ export function TimeControls({
           </div>
         </div>
 
-        <SheetFooter className="mt-6">
-          <Button onClick={onSaveSettings} className="w-full">
-            <Save className="w-4 h-4 mr-2" />
+        <SheetFooter className="mt-8">
+          <Button 
+            onClick={onSaveSettings} 
+            className="w-full bg-primary hover:bg-primary/90 text-white py-6"
+          >
+            <Save className="w-5 h-5 mr-2" />
             {t('saveSettings')}
           </Button>
         </SheetFooter>

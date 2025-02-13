@@ -2,8 +2,17 @@
 export const DURATION_OPTIONS = [
   900,  // 15 minutes
   1800, // 30 minutes
-  3600, // 1 hour
-  7200  // 2 hours
+  2700, // 45 minutes
+  3600  // 1 hour
+];
+
+export const EXTENDED_DURATION_OPTIONS = [
+  7200,   // 2 hours
+  10800,  // 3 hours
+  14400,  // 4 hours
+  21600,  // 6 hours
+  43200,  // 12 hours
+  86400   // 24 hours
 ];
 
 export const THEME_COLORS = [
