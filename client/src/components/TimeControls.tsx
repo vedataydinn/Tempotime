@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -9,8 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DURATION_OPTIONS, EXTENDED_DURATION_OPTIONS, THEME_COLORS } from "@/lib/constants";
-import { Clock, FastForward, Rewind, Save, Palette, Globe } from "lucide-react";
+import { DURATION_OPTIONS, EXTENDED_DURATION_OPTIONS, THEME_COLORS, Language, ThemeColor } from "@/lib/constants";
+import { Clock, FastForward, Rewind, Save, Palette, Globe, RefreshCcw } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -25,16 +26,18 @@ interface TimeControlsProps {
   timeSpeed: number;
   showSeconds: boolean;
   open: boolean;
-  language: string;
-  themeColor: string;
+  language: Language;
+  themeColor: ThemeColor;
   t: (key: string) => string;
   onOpenChange: (open: boolean) => void;
   onDurationChange: (duration: number) => void;
   onSpeedChange: (speed: number) => void;
   onShowSecondsChange: (show: boolean) => void;
-  onLanguageChange: (lang: string) => void;
-  onThemeColorChange: (color: string) => void;
+  onLanguageChange: (lang: Language) => void;
+  onThemeColorChange: (color: ThemeColor) => void;
   onSaveSettings: () => void;
+  onResetToNormalTime: () => void;
+  isSettingsSaved: boolean;
 }
 
 export function TimeControls({
@@ -51,12 +54,14 @@ export function TimeControls({
   onShowSecondsChange,
   onLanguageChange,
   onThemeColorChange,
-  onSaveSettings
+  onSaveSettings,
+  onResetToNormalTime,
+  isSettingsSaved
 }: TimeControlsProps) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="bg-white dark:bg-gray-950 border-l border-gray-200 dark:border-gray-800">
-        <SheetHeader className="pb-4 border-b border-gray-200 dark:border-gray-800">
+     <SheetContent className="bg-green-100 dark:bg-green-950 border-l border-green-200 dark:border-green-800">
+     <SheetHeader className="pb-4 border-b border-green-200 dark:border-green-800">
           <SheetTitle>{t('title')}</SheetTitle>
           <SheetDescription>
             {t('description')}
@@ -78,9 +83,16 @@ export function TimeControls({
                   key={duration}
                   variant={selectedDuration === duration ? "default" : "outline"}
                   onClick={() => onDurationChange(duration)}
-                  className="transition-all hover:scale-105"
+                  className={`
+                    transition-all 
+                    hover:scale-105 
+                    hover:shadow-lg 
+                    ${selectedDuration === duration 
+                      ? 'bg-black text-white hover:bg-black/90' 
+                      : 'border-primary/50 text-primary hover:bg-primary/10'}
+                  `}
                 >
-                  {duration / 60} {t('minutes')}
+                  {duration / 60} {t('minutes' as const)}
                 </Button>
               ))}
             </div>
@@ -95,12 +107,34 @@ export function TimeControls({
               </SelectTrigger>
               <SelectContent>
                 {EXTENDED_DURATION_OPTIONS.map((duration) => (
-                  <SelectItem key={duration} value={duration.toString()}>
-                    {duration / 3600} {t('hours')}
+                  <SelectItem 
+                    key={duration} 
+                    value={duration.toString()}
+                    className={`
+                      cursor-pointer 
+                      transition-all 
+                      hover:scale-105 
+                      hover:shadow-lg 
+                      ${selectedDuration === duration 
+                        ? 'bg-black text-white hover:bg-black/90' 
+                        : 'hover:bg-primary/10'}
+                    `}
+                  >
+                    {duration / 3600} {t('hours' as const)}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
+
+            {/* Saniye gösterimi ayarı */}
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="show-seconds"
+                checked={showSeconds}
+                onCheckedChange={onShowSecondsChange}
+              />
+              <Label htmlFor="show-seconds">{t('showSeconds')}</Label>
+            </div>
           </div>
 
           <div className="space-y-4">
@@ -151,51 +185,44 @@ export function TimeControls({
           <div className="space-y-4">
             <h2 className="text-lg font-semibold flex items-center gap-2 text-primary">
               <Palette className="w-5 h-5" />
-              {t('theme')}
+              {t('appearance')}
             </h2>
             <div className="flex flex-wrap gap-2">
               {THEME_COLORS.map((color) => (
                 <Button
                   key={color.value}
-                  variant="outline"
-                  className="w-8 h-8 rounded-full p-0 relative"
-                  style={{ backgroundColor: color.value }}
+                  variant={themeColor === color.value ? "default" : "outline"}
                   onClick={() => onThemeColorChange(color.value)}
+                  className="transition-all hover:scale-105"
+                  style={{ backgroundColor: color.value }}
                 >
-                  {themeColor === color.value && (
-                    <div className="absolute inset-0 rounded-full border-2 border-white" />
-                  )}
+                  {color.name}
                 </Button>
               ))}
             </div>
           </div>
 
-          <div className="space-y-4">
-            <h2 className="text-lg font-semibold flex items-center gap-2 text-primary">
-              <Clock className="w-5 h-5" />
-              {t('appearance')}
-            </h2>
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">
-                {t('showSeconds')}
-              </p>
-              <Switch
-                checked={showSeconds}
-                onCheckedChange={onShowSecondsChange}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Kaydet butonu her zaman altta sabit kalacak */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800">
+          {/* Normal zamana dönüş butonu - tema ayarları ve kaydet butonu arasına eklendi */}
           <Button 
-            onClick={onSaveSettings} 
-            className="w-full bg-primary hover:bg-primary/90 text-white py-6"
+            variant="secondary" 
+            className="w-full mt-4"
+            onClick={onResetToNormalTime}
+            disabled={!isSettingsSaved} // Ayarlar kaydedilmemişse devre dışı
           >
-            <Save className="w-5 h-5 mr-2" />
-            {t('saveSettings')}
+            <RefreshCcw className="mr-2 w-4 h-4" />
+            Normal Zamana Dön
           </Button>
+
+          {/* Kaydet butonu her zaman altta sabit kalacak */}
+          <div className="absolute bottom-0 left-0 right-0 p-4 bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800">
+            <Button 
+              onClick={onSaveSettings} 
+              className="w-full bg-primary hover:bg-primary/90 text-white py-6"
+            >
+              <Save className="w-5 h-5 mr-2" />
+              {t('saveSettings')}
+            </Button>
+          </div>
         </div>
       </SheetContent>
     </Sheet>

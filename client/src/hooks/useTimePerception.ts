@@ -13,6 +13,7 @@ export function useTimePerception() {
   const [startTime, setStartTime] = useState(new Date());
   const [isActive, setIsActive] = useState(false);
   const [showSeconds, setShowSeconds] = useState(true);
+  const [isSettingsSaved, setIsSettingsSaved] = useState(false); // Yeni state
 
   const { language, setLanguage, themeColor, setThemeColor, t } = useSettings();
   const { playSpeedChangeSound } = useAudioFeedback();
@@ -84,6 +85,7 @@ export function useTimePerception() {
     setStartTime(new Date()); // Yeni başlangıç zamanını ayarla
     setActiveTimeSpeed(timeSpeed);
     setIsActive(true);
+    setIsSettingsSaved(true); // Ayarlar kaydedildi
     playSpeedChangeSound(timeSpeed);
     setSettingsOpen(false);
 
@@ -93,6 +95,25 @@ export function useTimePerception() {
       duration: 3000,
     });
   }, [timeSpeed, playSpeedChangeSound, toast, t]);
+
+  // Normal zamana dönüş fonksiyonu
+  const resetToNormalTime = useCallback(() => {
+    if (!isSettingsSaved) return; // Ayarlar kaydedilmemişse çalışmaz
+
+    setCurrentTime(new Date());
+    setTimeSpeed(1);
+    setActiveTimeSpeed(1);
+    setStartTime(new Date());
+    setIsActive(false);
+    setSettingsOpen(false);
+    setIsSettingsSaved(false); // Tekrar false'a çek
+
+    toast({
+      title: "Zaman Sıfırlandı",
+      description: "Zaman normal akışına geri döndü.",
+      duration: 3000,
+    });
+  }, [toast, isSettingsSaved]);
 
   return {
     currentTime,
@@ -106,6 +127,7 @@ export function useTimePerception() {
     language,
     themeColor,
     t,
+    isSettingsSaved, // Yeni return değeri
     setSelectedDuration,
     setTimeSpeed: handleSpeedChange,
     setShowSeconds,
@@ -113,6 +135,7 @@ export function useTimePerception() {
     setThemeColor,
     closeReminder: () => setReminderOpen(false),
     toggleSettings: (open: boolean) => setSettingsOpen(open),
-    saveSettings
+    saveSettings,
+    resetToNormalTime,
   };
 }

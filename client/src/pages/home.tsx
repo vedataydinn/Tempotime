@@ -5,6 +5,7 @@ import { useTimePerception } from "@/hooks/useTimePerception";
 import { motion } from "framer-motion";
 import { Settings2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Language, ThemeColor } from "@/lib/constants";
 
 export default function Home() {
   const {
@@ -19,6 +20,7 @@ export default function Home() {
     language,
     themeColor,
     t,
+    isSettingsSaved, // Yeni değişken
     setSelectedDuration,
     setTimeSpeed,
     setShowSeconds,
@@ -26,7 +28,8 @@ export default function Home() {
     setThemeColor,
     closeReminder,
     toggleSettings,
-    saveSettings
+    saveSettings,
+    resetToNormalTime
   } = useTimePerception();
 
   return (
@@ -55,9 +58,11 @@ export default function Home() {
           onDurationChange={setSelectedDuration}
           onSpeedChange={setTimeSpeed}
           onShowSecondsChange={setShowSeconds}
-          onLanguageChange={setLanguage}
-          onThemeColorChange={setThemeColor}
+          onLanguageChange={(langCode: Language) => setLanguage(langCode)}
+          onThemeColorChange={(color: ThemeColor) => setThemeColor(color)}
           onSaveSettings={saveSettings}
+          onResetToNormalTime={resetToNormalTime}
+          isSettingsSaved={isSettingsSaved} // Yeni prop
         />
 
         <ReminderDialog 
@@ -68,19 +73,22 @@ export default function Home() {
         />
       </div>
 
-      {/* Ayarlar butonu - sol alt köşede */}
+      {/* Ayarlar butonu - sağ alt köşede */}
       <motion.div 
-        className="fixed bottom-4 left-4"
-        initial={{ opacity: 0.3 }}
-        whileHover={{ opacity: 1 }}
+        className="fixed bottom-4 right-4"
+        initial={{ opacity: 1 }}
       >
         <Button
-          variant="ghost"
+          variant="outline" 
           size="icon"
           onClick={() => toggleSettings(true)}
-          className="hover:bg-primary/20"
+          className="w-14 h-14 rounded-full shadow-2xl 
+                     bg-black text-white 
+                     hover:bg-white hover:text-black hover:border-black
+                     border-2 border-black
+                     transition-all duration-300"
         >
-          <Settings2 className="w-6 h-6" />
+          <Settings2 className="w-9 h-9" />
         </Button>
       </motion.div>
     </motion.div>

@@ -61,6 +61,18 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        electricBlue: {
+          DEFAULT: "hsl(210, 100%, 55%)",
+          foreground: "hsl(0, 0%, 100%)",
+        },
+        vibrantOrange: {
+          DEFAULT: "hsl(30, 100%, 55%)",
+          foreground: "hsl(0, 0%, 100%)",
+        },
+        vibrantTurquoise: {
+          DEFAULT: "hsl(175, 85%, 45%)",
+          foreground: "hsl(0, 0%, 100%)",
+        },
       },
       keyframes: {
         "accordion-down": {
