@@ -12,6 +12,7 @@ export default function Home() {
     reminderOpen,
     settingsOpen,
     backgroundColor,
+    isActive,
     setSelectedDuration,
     setTimeSpeed,
     closeReminder,
@@ -28,6 +29,7 @@ export default function Home() {
       <div className="w-full max-w-lg space-y-8">
         <Clock 
           currentTime={currentTime}
+          isActive={isActive}
           onSettingsClick={() => toggleSettings(true)}
         />
 

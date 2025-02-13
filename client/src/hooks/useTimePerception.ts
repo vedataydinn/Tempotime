@@ -10,6 +10,7 @@ export function useTimePerception() {
   const [reminderOpen, setReminderOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [startTime] = useState(new Date());
+  const [isActive, setIsActive] = useState(false);
 
   const { playSpeedChangeSound } = useAudioFeedback();
   const { toast } = useToast();
@@ -24,29 +25,53 @@ export function useTimePerception() {
     const now = new Date();
     const elapsedMilliseconds = now.getTime() - startTime.getTime();
     const manipulatedMilliseconds = elapsedMilliseconds * activeTimeSpeed;
-
     const manipulatedTime = new Date(startTime.getTime() + manipulatedMilliseconds);
     return manipulatedTime;
   }, [startTime, activeTimeSpeed]);
 
-  // Saat güncellemesi
+  // Saat güncellemesi - her saniye normal olarak artar ama hızlandırılmış zamanı gösterir
   useEffect(() => {
+    if (!isActive) return;
+
     const interval = setInterval(() => {
       const manipulatedTime = calculateManipulatedTime();
       setCurrentTime(manipulatedTime);
-    }, 1000);
+    }, 1000); // Her saniye güncelle ama manipüle edilmiş zamanı göster
 
     return () => clearInterval(interval);
-  }, [activeTimeSpeed, calculateManipulatedTime]);
+  }, [isActive, calculateManipulatedTime]);
+
+  // Süre kontrolü
+  useEffect(() => {
+    if (!isActive) return;
+
+    const checkDuration = setInterval(() => {
+      const manipulatedTime = calculateManipulatedTime();
+      const elapsedTime = manipulatedTime.getTime() - startTime.getTime();
+
+      if (elapsedTime >= selectedDuration * 1000) {
+        setIsActive(false);
+        toast({
+          title: "Süre Doldu!",
+          description: "Belirlediğiniz zaman dilimi sona erdi.",
+          duration: 5000,
+        });
+      }
+    }, 1000);
+
+    return () => clearInterval(checkDuration);
+  }, [isActive, selectedDuration, startTime, calculateManipulatedTime, toast]);
 
   // 15 dakikalık hatırlatıcılar
   useEffect(() => {
+    if (!isActive) return;
+
     const reminderInterval = setInterval(() => {
       setReminderOpen(true);
     }, 15 * 60 * 1000); // 15 dakika
 
     return () => clearInterval(reminderInterval);
-  }, []);
+  }, [isActive]);
 
   // Hız değişimi kontrolü
   const handleSpeedChange = useCallback((newSpeed: number) => {
@@ -56,6 +81,7 @@ export function useTimePerception() {
   // Ayarları kaydetme
   const saveSettings = useCallback(() => {
     setActiveTimeSpeed(timeSpeed);
+    setIsActive(true);
     playSpeedChangeSound(timeSpeed);
     setSettingsOpen(false);
 
@@ -73,6 +99,7 @@ export function useTimePerception() {
     reminderOpen,
     settingsOpen,
     backgroundColor,
+    isActive,
     setSelectedDuration,
     setTimeSpeed: handleSpeedChange,
     closeReminder: () => setReminderOpen(false),
