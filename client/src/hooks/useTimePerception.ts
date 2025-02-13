@@ -19,14 +19,25 @@ export function useTimePerception() {
     ? `hsl(220, ${Math.round((1 - activeTimeSpeed) * 100)}%, 95%)`
     : `hsl(350, ${Math.round((activeTimeSpeed - 1) * 100)}%, 95%)`;
 
+  // Manipüle edilmiş zamanı hesaplama
+  const calculateManipulatedTime = useCallback(() => {
+    const now = new Date();
+    const elapsedMilliseconds = now.getTime() - startTime.getTime();
+    const manipulatedMilliseconds = elapsedMilliseconds * activeTimeSpeed;
+
+    const manipulatedTime = new Date(startTime.getTime() + manipulatedMilliseconds);
+    return manipulatedTime;
+  }, [startTime, activeTimeSpeed]);
+
   // Saat güncellemesi
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000 / activeTimeSpeed);
+      const manipulatedTime = calculateManipulatedTime();
+      setCurrentTime(manipulatedTime);
+    }, 1000);
 
     return () => clearInterval(interval);
-  }, [activeTimeSpeed]);
+  }, [activeTimeSpeed, calculateManipulatedTime]);
 
   // 15 dakikalık hatırlatıcılar
   useEffect(() => {
