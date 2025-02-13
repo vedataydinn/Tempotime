@@ -1,8 +1,8 @@
 import express from 'express';
+import cors from 'cors';
 import { createServer } from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import cors from 'cors';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,13 +28,8 @@ app.get('*', (req, res) => {
 });
 
 // Sunucuyu oluştur
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5173;
 const server = createServer(app);
-
-// API'yi dışa aktar
-export default function handler(req, res) {
-  app(req, res);
-}
 
 // Geliştirme ortamında sunucuyu başlat
 if (process.env.NODE_ENV !== 'production') {
@@ -42,3 +37,5 @@ if (process.env.NODE_ENV !== 'production') {
     console.log(`Sunucu ${PORT} portunda çalışıyor`);
   });
 }
+
+export default server;
