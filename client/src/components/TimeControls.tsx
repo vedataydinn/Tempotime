@@ -2,8 +2,15 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { DURATION_OPTIONS } from "@/lib/constants";
-import { Clock, FastForward, Rewind, Save } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { DURATION_OPTIONS, THEME_COLORS } from "@/lib/constants";
+import { Clock, FastForward, Rewind, Save, Palette, Globe } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -18,10 +25,15 @@ interface TimeControlsProps {
   timeSpeed: number;
   showSeconds: boolean;
   open: boolean;
+  language: string;
+  themeColor: string;
+  t: (key: string) => string;
   onOpenChange: (open: boolean) => void;
   onDurationChange: (duration: number) => void;
   onSpeedChange: (speed: number) => void;
   onShowSecondsChange: (show: boolean) => void;
+  onLanguageChange: (lang: string) => void;
+  onThemeColorChange: (color: string) => void;
   onSaveSettings: () => void;
 }
 
@@ -30,19 +42,24 @@ export function TimeControls({
   timeSpeed,
   showSeconds,
   open,
+  language,
+  themeColor,
+  t,
   onOpenChange,
   onDurationChange,
   onSpeedChange,
   onShowSecondsChange,
+  onLanguageChange,
+  onThemeColorChange,
   onSaveSettings
 }: TimeControlsProps) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Zaman Kontrolü</SheetTitle>
+          <SheetTitle>{t('title')}</SheetTitle>
           <SheetDescription>
-            Zamanı hızlandırabilir veya yavaşlatabilirsiniz. Seçtiğiniz süre gizli kalacak.
+            {t('description')}
           </SheetDescription>
         </SheetHeader>
 
@@ -50,10 +67,10 @@ export function TimeControls({
           <div className="space-y-4">
             <h2 className="text-lg font-semibold flex items-center gap-2 text-primary">
               <Clock className="w-5 h-5" />
-              Süre Seçimi
+              {t('duration')}
             </h2>
             <p className="text-sm text-muted-foreground">
-              Deneyimlemek istediğiniz zaman dilimini seçin
+              {t('durationDesc')}
             </p>
             <div className="flex flex-wrap gap-2">
               {DURATION_OPTIONS.map((duration) => (
@@ -63,7 +80,7 @@ export function TimeControls({
                   onClick={() => onDurationChange(duration)}
                   className="transition-all hover:scale-105"
                 >
-                  {duration / 60} dakika
+                  {duration / 60} {t('minutes')}
                 </Button>
               ))}
             </div>
@@ -76,10 +93,10 @@ export function TimeControls({
               ) : (
                 <FastForward className="w-5 h-5" />
               )}
-              Zaman Hızı
+              {t('speed')}
             </h2>
             <p className="text-sm text-muted-foreground">
-              Zamanın akış hızını ayarlayın
+              {t('speedDesc')}
             </p>
             <Slider
               value={[timeSpeed]}
@@ -91,21 +108,59 @@ export function TimeControls({
             />
             <p className="text-sm text-center font-medium">
               {timeSpeed < 1 
-                ? "Yavaş" 
+                ? t('slow')
                 : timeSpeed > 1 
-                  ? "Hızlı" 
-                  : "Normal"} ({timeSpeed}x)
+                  ? t('fast')
+                  : t('normal')} ({timeSpeed}x)
             </p>
           </div>
 
           <div className="space-y-4">
             <h2 className="text-lg font-semibold flex items-center gap-2 text-primary">
+              <Globe className="w-5 h-5" />
+              {t('language')}
+            </h2>
+            <Select value={language} onValueChange={onLanguageChange}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="tr">Türkçe</SelectItem>
+                <SelectItem value="en">English</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-lg font-semibold flex items-center gap-2 text-primary">
+              <Palette className="w-5 h-5" />
+              {t('theme')}
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {THEME_COLORS.map((color) => (
+                <Button
+                  key={color.value}
+                  variant="outline"
+                  className="w-8 h-8 rounded-full p-0 relative"
+                  style={{ backgroundColor: color.value }}
+                  onClick={() => onThemeColorChange(color.value)}
+                >
+                  {themeColor === color.value && (
+                    <div className="absolute inset-0 rounded-full border-2 border-white" />
+                  )}
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-lg font-semibold flex items-center gap-2 text-primary">
               <Clock className="w-5 h-5" />
-              Görünüm
+              {t('appearance')}
             </h2>
             <div className="flex items-center justify-between">
               <p className="text-sm text-muted-foreground">
-                Saniye gösterimi
+                {t('showSeconds')}
               </p>
               <Switch
                 checked={showSeconds}
@@ -118,7 +173,7 @@ export function TimeControls({
         <SheetFooter className="mt-6">
           <Button onClick={onSaveSettings} className="w-full">
             <Save className="w-4 h-4 mr-2" />
-            Ayarları Kaydet
+            {t('saveSettings')}
           </Button>
         </SheetFooter>
       </SheetContent>

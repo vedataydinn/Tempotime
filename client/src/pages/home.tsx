@@ -16,9 +16,14 @@ export default function Home() {
     backgroundColor,
     isActive,
     showSeconds,
+    language,
+    themeColor,
+    t,
     setSelectedDuration,
     setTimeSpeed,
     setShowSeconds,
+    setLanguage,
+    setThemeColor,
     closeReminder,
     toggleSettings,
     saveSettings
@@ -35,7 +40,7 @@ export default function Home() {
           currentTime={currentTime}
           isActive={isActive}
           showSeconds={showSeconds}
-          //onSettingsClick={() => toggleSettings(true)}  Removed this line
+          onSettingsClick={() => toggleSettings(true)}
         />
 
         <TimeControls
@@ -43,10 +48,15 @@ export default function Home() {
           timeSpeed={timeSpeed}
           showSeconds={showSeconds}
           open={settingsOpen}
+          language={language}
+          themeColor={themeColor}
+          t={t}
           onOpenChange={toggleSettings}
           onDurationChange={setSelectedDuration}
           onSpeedChange={setTimeSpeed}
           onShowSecondsChange={setShowSeconds}
+          onLanguageChange={setLanguage}
+          onThemeColorChange={setThemeColor}
           onSaveSettings={saveSettings}
         />
 
@@ -54,6 +64,7 @@ export default function Home() {
           open={reminderOpen} 
           onClose={closeReminder}
           timeSpeed={timeSpeed}
+          t={t}
         />
       </div>
 

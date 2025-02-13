@@ -12,25 +12,26 @@ interface ReminderDialogProps {
   open: boolean;
   onClose: () => void;
   timeSpeed: number;
+  t: (key: string) => string;
 }
 
-export function ReminderDialog({ open, onClose, timeSpeed }: ReminderDialogProps) {
+export function ReminderDialog({ open, onClose, timeSpeed, t }: ReminderDialogProps) {
   return (
     <AlertDialog open={open}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-primary">Zaman Kontrolü</AlertDialogTitle>
+          <AlertDialogTitle className="text-primary">{t('title')}</AlertDialogTitle>
           <AlertDialogDescription className="space-y-4">
-            <p className="font-medium">Şu an zamanı nasıl deneyimliyorsunuz?</p>
+            <p className="font-medium">{t('howExperiencing')}</p>
             <p>
               {timeSpeed < 1 
-                ? "Zaman yavaşlatıldı, her an daha uzun sürebilir."
+                ? t('speedStatus.slow')
                 : timeSpeed > 1
-                  ? "Zaman hızlandırıldı, anlar daha hızlı geçebilir."
-                  : "Zaman normal hızında akıyor."}
+                  ? t('speedStatus.fast')
+                  : t('speedStatus.normal')}
             </p>
             <p className="italic">
-              Bir an durun ve zamanın nasıl aktığını hissedin...
+              {t('feelTime')}
             </p>
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -40,7 +41,7 @@ export function ReminderDialog({ open, onClose, timeSpeed }: ReminderDialogProps
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <Button onClick={onClose}>Devam Et</Button>
+          <Button onClick={onClose}>{t('continue')}</Button>
         </motion.div>
       </AlertDialogContent>
     </AlertDialog>

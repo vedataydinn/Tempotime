@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAudioFeedback } from "./useAudioFeedback";
+import { useSettings } from "./useSettings";
 import { useToast } from "@/hooks/use-toast";
 
 export function useTimePerception() {
@@ -13,13 +14,12 @@ export function useTimePerception() {
   const [isActive, setIsActive] = useState(false);
   const [showSeconds, setShowSeconds] = useState(true);
 
+  const { language, setLanguage, themeColor, setThemeColor, t } = useSettings();
   const { playSpeedChangeSound } = useAudioFeedback();
   const { toast } = useToast();
 
   // Zaman hızına göre arka plan rengi hesaplama
-  const backgroundColor = activeTimeSpeed < 1 
-    ? `hsl(220, ${Math.round((1 - activeTimeSpeed) * 100)}%, 95%)`
-    : `hsl(350, ${Math.round((activeTimeSpeed - 1) * 100)}%, 95%)`;
+  const backgroundColor = themeColor;
 
   // Manipüle edilmiş zamanı hesaplama
   const calculateManipulatedTime = useCallback(() => {
@@ -53,7 +53,7 @@ export function useTimePerception() {
       if (elapsedTime >= selectedDuration * 1000) {
         setIsActive(false);
         toast({
-          title: "Süre Doldu!",
+          title: t('title'),
           description: "Belirlediğiniz zaman dilimi sona erdi.",
           duration: 5000,
         });
@@ -61,7 +61,7 @@ export function useTimePerception() {
     }, 1000);
 
     return () => clearInterval(checkDuration);
-  }, [isActive, selectedDuration, startTime, calculateManipulatedTime, toast]);
+  }, [isActive, selectedDuration, startTime, calculateManipulatedTime, toast, t]);
 
   // 15 dakikalık hatırlatıcılar
   useEffect(() => {
@@ -88,11 +88,11 @@ export function useTimePerception() {
     setSettingsOpen(false);
 
     toast({
-      title: "Ayarlar Kaydedildi",
-      description: `Zaman hızı ${timeSpeed}x olarak ayarlandı.`,
+      title: t('title'),
+      description: `${t('speed')}: ${timeSpeed}x`,
       duration: 3000,
     });
-  }, [timeSpeed, playSpeedChangeSound, toast]);
+  }, [timeSpeed, playSpeedChangeSound, toast, t]);
 
   return {
     currentTime,
@@ -103,9 +103,14 @@ export function useTimePerception() {
     backgroundColor,
     isActive,
     showSeconds,
+    language,
+    themeColor,
+    t,
     setSelectedDuration,
     setTimeSpeed: handleSpeedChange,
     setShowSeconds,
+    setLanguage,
+    setThemeColor,
     closeReminder: () => setReminderOpen(false),
     toggleSettings: (open: boolean) => setSettingsOpen(open),
     saveSettings
