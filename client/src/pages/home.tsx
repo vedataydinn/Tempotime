@@ -10,10 +10,12 @@ export default function Home() {
     selectedDuration,
     timeSpeed,
     reminderOpen,
+    settingsOpen,
+    backgroundColor,
     setSelectedDuration,
     setTimeSpeed,
     closeReminder,
-    backgroundColor
+    toggleSettings
   } = useTimePerception();
 
   return (
@@ -22,12 +24,17 @@ export default function Home() {
       animate={{ backgroundColor }}
       transition={{ duration: 2 }}
     >
-      <div className="w-full max-w-md space-y-8">
-        <Clock currentTime={currentTime} />
-        
+      <div className="w-full max-w-lg space-y-8">
+        <Clock 
+          currentTime={currentTime}
+          onSettingsClick={toggleSettings}
+        />
+
         <TimeControls
           selectedDuration={selectedDuration}
           timeSpeed={timeSpeed}
+          open={settingsOpen}
+          onOpenChange={toggleSettings}
           onDurationChange={setSelectedDuration}
           onSpeedChange={setTimeSpeed}
         />
@@ -35,6 +42,7 @@ export default function Home() {
         <ReminderDialog 
           open={reminderOpen} 
           onClose={closeReminder}
+          timeSpeed={timeSpeed}
         />
       </div>
     </motion.div>
