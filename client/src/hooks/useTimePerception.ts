@@ -9,7 +9,7 @@ export function useTimePerception() {
   const [activeTimeSpeed, setActiveTimeSpeed] = useState(1);
   const [reminderOpen, setReminderOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [startTime] = useState(new Date());
+  const [startTime, setStartTime] = useState(new Date());
   const [isActive, setIsActive] = useState(false);
   const [showSeconds, setShowSeconds] = useState(true);
 
@@ -23,24 +23,24 @@ export function useTimePerception() {
 
   // Manipüle edilmiş zamanı hesaplama
   const calculateManipulatedTime = useCallback(() => {
+    if (!isActive) return new Date();
+
     const now = new Date();
     const elapsedMilliseconds = now.getTime() - startTime.getTime();
     const manipulatedMilliseconds = elapsedMilliseconds * activeTimeSpeed;
     const manipulatedTime = new Date(startTime.getTime() + manipulatedMilliseconds);
     return manipulatedTime;
-  }, [startTime, activeTimeSpeed]);
+  }, [startTime, activeTimeSpeed, isActive]);
 
   // Saat güncellemesi - her saniye normal olarak artar ama hızlandırılmış zamanı gösterir
   useEffect(() => {
-    if (!isActive) return;
-
     const interval = setInterval(() => {
       const manipulatedTime = calculateManipulatedTime();
       setCurrentTime(manipulatedTime);
     }, 1000); // Her saniye güncelle ama manipüle edilmiş zamanı göster
 
     return () => clearInterval(interval);
-  }, [isActive, calculateManipulatedTime]);
+  }, [calculateManipulatedTime]);
 
   // Süre kontrolü
   useEffect(() => {
@@ -81,6 +81,7 @@ export function useTimePerception() {
 
   // Ayarları kaydetme
   const saveSettings = useCallback(() => {
+    setStartTime(new Date()); // Yeni başlangıç zamanını ayarla
     setActiveTimeSpeed(timeSpeed);
     setIsActive(true);
     playSpeedChangeSound(timeSpeed);

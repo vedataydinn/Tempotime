@@ -33,9 +33,8 @@ export function Clock({ currentTime, showSeconds, onSettingsClick }: ClockProps)
           {timeString}
         </motion.h1>
       </Card>
-
       <motion.div 
-        className="absolute top-2 right-2"
+        className="absolute bottom-2 left-2"
         initial={{ opacity: 0 }}
         variants={{
           hover: { opacity: 1 }
