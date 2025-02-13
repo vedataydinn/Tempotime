@@ -1,0 +1,28 @@
+Başlık: Zaman Algısını Değiştiren Web Uygulaması (Next.js ve Tailwind CSS)
+
+Açıklama:
+
+Bu uygulama, kullanıcıların zaman algısını değiştirmeye yönelik bir deneyim sunacak. Kullanıcı, belirlediği bir süreyi (örneğin 1 saat) hızlandırarak veya yavaşlatarak, zamanın nasıl geçtiğini farklı bir şekilde deneyimleyecek. Gerçek saat ekranda gösterilecek, ancak belirlenen süre ekranda görünmeyecek ve o süreye göre zaman aksacak. Uygulama Next.js ve Tailwind CSS kullanılarak yapılacak ve veritabanı kullanılmayacak.
+
+Gereksinimler:
+
+Ana Sayfa (Home Page):
+
+Kullanıcıya, 1 saatlik bir süreyi hızlandırma veya yavaşlatma seçeneği sunulacak.
+Kullanıcı, istediği zaman dilimini (örneğin 30 dakika, 1 saat vs.) seçebilecek ancak bu süre ekranda görünmeyecek.
+Ekranda sadece gerçek saat gösterilecek.
+Zaman, kullanıcının seçimine göre hızlandırılacak veya yavaşlatılacak.
+Zaman Hızlandırma ve Yavaşlatma:
+
+Kullanıcı bir süreyi seçtikten sonra, gerçek zaman saatine göre zaman hızlandırılacak veya yavaşlatılacak. Örneğin, 1 saatlik bir süreyi 10 dakikaya düşürebilecek veya 1 saati 2 saate çıkarabilecek.
+Zaman geçişi görsel olarak, ekranın genel renk tonu veya arka plan animasyonlarıyla belirtilecek. Ancak zamanın geçişi gerçek saatin gösterilmesinin aksine, sadece kullanıcının belirlediği hızda olacak.
+Farkındalık Zamanı (15 Dakika Hatırlatma):
+
+Uygulama, her 15 dakikada bir kullanıcıya "Şu an nasıl hissediyorsunuz? Zaman nasıl geçiyor?" gibi bir hatırlatma gösterir. Bu hatırlatmalar, zamanın ne kadar hızlı geçtiğini veya ne kadar yavaş olduğunu fark etmelerine yardımcı olacak.
+Gerçek Zaman Gösterimi:
+
+Ekranda sadece gerçek saat gösterilecek. Zaman hızlandırıldığında veya yavaşlatıldığında, bu yalnızca kullanıcıya sunulan deneyimi etkileyecek ve gerçek saatte değişim olmayacak.
+Duyusal Gösterimler:
+
+Zaman hızlandıkça arka plan renkleri değişebilir veya ses efektleri eklenebilir (örneğin, hızlanan bir arka plan sesi).
+Kullanıcılar zamanın geçtiğini hissettiklerinde, görsel ve işitsel değişiklikler olacak, ancak saatin gerçek ilerleyişi her zaman doğru kalacak.
