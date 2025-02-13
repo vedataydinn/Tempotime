@@ -17,14 +17,10 @@ app.use(express.json());
 const staticPath = path.resolve(__dirname, '../dist/public');
 app.use(express.static(staticPath));
 
-// API rotaları
+// Temel API rotaları
 app.get('/api/health', (req, res) => {
   res.json({ status: 'Sunucu çalışıyor', timestamp: new Date().toISOString() });
 });
-
-// Diğer API rotalarınızı buraya ekleyebilirsiniz
-// Örnek:
-// app.get('/api/users', (req, res) => { ... });
 
 // Tüm diğer rotalar için React uygulamasını sun
 app.get('*', (req, res) => {
@@ -35,11 +31,14 @@ app.get('*', (req, res) => {
 const PORT = process.env.PORT || 3000;
 const server = createServer(app);
 
+// API'yi dışa aktar
+export default function handler(req, res) {
+  app(req, res);
+}
+
 // Geliştirme ortamında sunucuyu başlat
 if (process.env.NODE_ENV !== 'production') {
   server.listen(PORT, () => {
     console.log(`Sunucu ${PORT} portunda çalışıyor`);
   });
 }
-
-export default server;
