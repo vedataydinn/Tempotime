@@ -2,13 +2,14 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { DURATION_OPTIONS } from "@/lib/constants";
-import { Clock, FastForward, Rewind } from "lucide-react";
+import { Clock, FastForward, Rewind, Save } from "lucide-react";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetDescription,
+  SheetFooter,
 } from "@/components/ui/sheet";
 
 interface TimeControlsProps {
@@ -18,6 +19,7 @@ interface TimeControlsProps {
   onOpenChange: (open: boolean) => void;
   onDurationChange: (duration: number) => void;
   onSpeedChange: (speed: number) => void;
+  onSaveSettings: () => void;
 }
 
 export function TimeControls({
@@ -26,7 +28,8 @@ export function TimeControls({
   open,
   onOpenChange,
   onDurationChange,
-  onSpeedChange
+  onSpeedChange,
+  onSaveSettings
 }: TimeControlsProps) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -90,6 +93,13 @@ export function TimeControls({
             </p>
           </div>
         </div>
+
+        <SheetFooter className="mt-6">
+          <Button onClick={onSaveSettings} className="w-full">
+            <Save className="w-4 h-4 mr-2" />
+            Ayarları Kaydet
+          </Button>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

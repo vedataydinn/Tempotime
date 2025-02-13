@@ -15,7 +15,8 @@ export default function Home() {
     setSelectedDuration,
     setTimeSpeed,
     closeReminder,
-    toggleSettings
+    toggleSettings,
+    saveSettings
   } = useTimePerception();
 
   return (
@@ -27,7 +28,7 @@ export default function Home() {
       <div className="w-full max-w-lg space-y-8">
         <Clock 
           currentTime={currentTime}
-          onSettingsClick={toggleSettings}
+          onSettingsClick={() => toggleSettings(true)}
         />
 
         <TimeControls
@@ -37,6 +38,7 @@ export default function Home() {
           onOpenChange={toggleSettings}
           onDurationChange={setSelectedDuration}
           onSpeedChange={setTimeSpeed}
+          onSaveSettings={saveSettings}
         />
 
         <ReminderDialog 
